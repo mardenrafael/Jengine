@@ -2,10 +2,10 @@ package core.Jengine.nodes;
 
 import java.util.*;
 
-public class Node  {
+public abstract class Node  {
 
 	private String name;
-	private ArrayList<Node> childs = new ArrayList<Node>();
+	private List<Node> childs = new ArrayList<Node>();
 	private Node parentNode = null;
 
 

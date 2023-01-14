@@ -1,6 +1,5 @@
 package core.Jengine.nodes2D;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
@@ -9,9 +8,7 @@ import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
@@ -19,9 +16,9 @@ import core.Jengine.components.ShaderLoader;
 import core.Jengine.nodes.Node;
 import core.utils.Logger;
 
-public class Shape2D extends Node {
+public abstract class Shape2D extends Node {
 	private int vbo;
-	private int vao;
+	protected int vao;
 	private int program;
 	private ShaderLoader shaderLoader = null; 
 	private float[] vertices;
@@ -65,13 +62,15 @@ public class Shape2D extends Node {
 		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 	}
 
+	abstract protected void bindAndPrepareVao();
+	
 	public void draw() {
 
 		glUseProgram(program);
 
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vao);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+		
+		
+		this.bindAndPrepareVao();
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glDisableVertexAttribArray(0);
