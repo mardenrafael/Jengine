@@ -2,7 +2,7 @@ package core.utils;
 
 import core.config.GlobalConfig;
 
-public class Logger {
+public final class Logger {
 	
 	/**
 	 * Just log on console

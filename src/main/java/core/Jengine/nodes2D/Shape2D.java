@@ -68,8 +68,6 @@ public abstract class Shape2D extends Node {
 
 		glUseProgram(program);
 
-		
-		
 		this.bindAndPrepareVao();
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
