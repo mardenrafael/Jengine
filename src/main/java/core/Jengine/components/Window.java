@@ -17,44 +17,48 @@ public class Window extends Node {
 	private GLFWVidMode mode;
 	private long monitor;
 	
-	public Renderer renderer;
+	public Renderer2D renderer;
 	
-	private Window(String name) {
-		super(name);
-		this.renderer = new Renderer();
+	private Window() {
+		super(null);
+		this.renderer = new Renderer2D();
 	}
 		
-	public static Window getWindow(String name) {
+	/**
+	 * Create one window instance if not exists, if already exists just return the current instance
+	 * @param name Title of Window
+	 * @return Window Instance
+	 */
+	public static Window getInstance() {
 
 		if (windowInstance == null) {
-			windowInstance = new Window(name);
+			windowInstance = new Window();
 
 			Logger.debugLog("new Window instance created");
-			windowInstance.init();
 			
 			return windowInstance;
 		}
 		return windowInstance;
 	}
 
+	
 	public void run() {
 		loop();
 
 		glfwSetErrorCallback(null).free();
 		glfwTerminate();
+		glfwDestroyWindow(windowId);
 
 	}
 
-	private void init() {
-
-		Logger.debugLog("Starting window...");
-		// Set Error print
-		GLFWErrorCallback.createPrint(System.err).set();
-
-		if (! glfwInit()) {
-			throw new IllegalStateException("Cannot initialized GLFW");
-		}
-
+	public void create(String title, OpenGlConfigOptions OpenGlconfig) {
+		
+		setName(title);
+		
+		this.boot();
+		
+		Logger.debugLog("Booting window...");
+		
 		monitor = glfwGetPrimaryMonitor();
 		mode = glfwGetVideoMode(this.monitor);
 
@@ -70,12 +74,36 @@ public class Window extends Node {
 		}
 		//setup key callback
 		setKeyCallBacks(new KeyCallBacks());
+		
+		this.enableOpenGL(OpenGlconfig);
+		
+		glfwShowWindow(windowId);//  show window
+		Logger.debugLog("Window booted successfully: \n\t" + getName());
 
+	}
+	
+	private void enableOpenGL(OpenGlConfigOptions config) {
+		
+		Logger.debugLog("Set configs for Opengl \n" + config.toString());
+		
 		glfwMakeContextCurrent(windowId);// make opengl current context
 		GL.createCapabilities();
-		glfwSwapInterval(1);// enable v-sync
-		glfwShowWindow(windowId);//  show window
-		Logger.debugLog("Window Started: " + getName());
+		
+		if (config.vSyncEnable()) {			
+			glfwSwapInterval(1);// enable v-sync
+		}
+	}
+	
+	private void boot() {
+
+		Logger.debugLog("Starting glfw...");
+		// Set Error print
+		GLFWErrorCallback.createPrint(System.err).set();
+
+		if (! glfwInit()) {
+			throw new IllegalStateException("Cannot initialized GLFW");
+		}
+		Logger.debugLog("Done!");
 	}
 
 

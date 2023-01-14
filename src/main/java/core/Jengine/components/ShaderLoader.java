@@ -100,7 +100,7 @@ public class ShaderLoader extends Node {
 			status = result.get(0);
 
 			if (status > 1) {
-				Logger.debugLog("Program log: " + glGetProgramInfoLog(programID), true);
+				Logger.logError("Program log: " + glGetProgramInfoLog(programID), true);
 			}
 			throw new Exception();
 		}
@@ -127,13 +127,13 @@ public class ShaderLoader extends Node {
 			status = result.get(0);
 
 			if (status > 1) {
-				Logger.debugLog("shader log: " + glGetShaderInfoLog(shaderID), true);
+				Logger.logError("shader log: " + glGetShaderInfoLog(shaderID), true);
 
 				glDeleteShader(shaderID);
 			}
 			throw new Exception();
 		}
-		Logger.debugLog("Done!");
+		Logger.debugLog("Success!");
 	}
 
 	/**
@@ -146,11 +146,9 @@ public class ShaderLoader extends Node {
 	 */
 	private void compileShader(Integer shaderID, String sourceCode, String shaderType) throws Exception {
 
-		//Compile vertex Shader
 		Logger.debugLog("Compiling " + shaderType + " shader...");
 		glShaderSource(shaderID, sourceCode);
-		glCompileShader(shaderID); 
-
+		glCompileShader(shaderID);
 		Logger.debugLog("Done!");
 		checkIntegrity(shaderID, shaderType);
 	}

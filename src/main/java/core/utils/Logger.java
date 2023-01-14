@@ -17,7 +17,7 @@ public class Logger {
 		System.out.println(log);
 	}
 	
-	public static void debugLog(Object log, boolean isError) {	
+	public static void logError(Object log, boolean isError) {	
 				
 		if (isError) {
 			System.err.println(log);
